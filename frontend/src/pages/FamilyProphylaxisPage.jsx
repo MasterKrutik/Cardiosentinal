@@ -58,17 +58,7 @@ export default function FamilyProphylaxisPage() {
     referred_facility: 'NEIGRIHMS Cardiology Wing'
   };
 
-  const FALLBACK_RECORDS = [
-    { id: "rec-1", dose_number: 1, penicillin_dose_date: "2026-02-10", next_due_date: "2026-03-03", adherence_status: "on_time", penicillin_batch_no: "BPG-2026-008", administering_facility: "Sohra CHC", administering_nurse: "Nurse Mary" },
-    { id: "rec-2", dose_number: 2, penicillin_dose_date: "2026-03-03", next_due_date: "2026-03-24", adherence_status: "on_time", penicillin_batch_no: "BPG-2026-014", administering_facility: "Sohra CHC", administering_nurse: "Nurse Mary" },
-    { id: "rec-3", dose_number: 3, penicillin_dose_date: "2026-03-31", next_due_date: "2026-04-21", adherence_status: "late", penicillin_batch_no: "BPG-2026-022", administering_facility: "Sohra CHC", administering_nurse: "Nurse Priya" },
-    { id: "rec-4", dose_number: 4, penicillin_dose_date: "2026-04-21", next_due_date: "2026-05-12", adherence_status: "on_time", penicillin_batch_no: "BPG-2026-029", administering_facility: "Sohra CHC", administering_nurse: "Nurse Mary" },
-    { id: "rec-5", dose_number: 5, penicillin_dose_date: "2026-05-12", next_due_date: "2026-06-02", adherence_status: "on_time", penicillin_batch_no: "BPG-2026-035", administering_facility: "Sohra CHC", administering_nurse: "Nurse Mary" },
-    { id: "rec-6", dose_number: 6, penicillin_dose_date: "2026-06-02", next_due_date: "2026-06-23", adherence_status: "on_time", penicillin_batch_no: "BPG-2026-041", administering_facility: "Sohra CHC", administering_nurse: "Nurse Mary" },
-    { id: "rec-7", dose_number: 7, penicillin_dose_date: "2026-06-23", next_due_date: "2026-07-14", adherence_status: "on_time", penicillin_batch_no: "BPG-2026-048", administering_facility: "Sohra CHC", administering_nurse: "Nurse Mary" }
-  ];
-
-  const records = (data?.records && data.records.length > 0) ? data.records : FALLBACK_RECORDS;
+  const records = data?.records || [];
   const adherenceRate = data?.adherence_rate || 85.7;
   const streak = data?.consecutive_streak || 4;
   const upcoming = data?.upcoming_dose || { next_due_date: '2026-08-15', dose_number: 8, administering_facility: 'Sohra CHC' };
