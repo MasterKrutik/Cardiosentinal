@@ -18,7 +18,7 @@ export default function CalibrationDashboard() {
   useEffect(() => {
     async function fetchCalibrationData() {
       try {
-        const res = await fetch('http://localhost:8000/api/model-trust/calibration');
+        const res = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/model-trust/calibration');
         if (res.ok) {
           const data = await res.json();
           setModelMetrics(data);

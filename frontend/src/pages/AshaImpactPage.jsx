@@ -36,13 +36,13 @@ export default function AshaImpactPage() {
   useEffect(() => {
     async function fetchImpact() {
       try {
-        const res = await fetch('http://localhost:8000/api/asha/impact-scorecard');
+        const res = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/asha/impact-scorecard');
         if (res.ok) {
           const data = await res.json();
           setImpact(data);
         }
         
-        const fbRes = await fetch('http://localhost:8000/api/asha/technique-feedback');
+        const fbRes = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/asha/technique-feedback');
         if (fbRes.ok) {
           const fbData = await fbRes.json();
           setFeedback(fbData);
@@ -97,7 +97,7 @@ export default function AshaImpactPage() {
   const targetTickPct = Math.min((targetSnr / maxSnr) * 100, 100).toFixed(2);
 
   const handleDownloadCertificate = () => {
-    const url = 'http://localhost:8000/api/asha/impact-certificate.pdf';
+    const url = (import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/asha/impact-certificate.pdf';
     const link = document.createElement('a');
     link.href = url;
     link.setAttribute('download', 'CardioSentinel_Impact_Certificate_Kavita_Devi.pdf');

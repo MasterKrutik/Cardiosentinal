@@ -73,7 +73,7 @@ export default function CampTriageView() {
 
   const fetchTriageData = async () => {
     try {
-      const res = await fetch('http://localhost:8000/api/triage/children');
+      const res = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/triage/children');
       if (res.ok) {
         const data = await res.json();
         setChildrenList(data.children || []);
@@ -155,7 +155,7 @@ export default function CampTriageView() {
     }
 
     try {
-      const res = await fetch('http://localhost:8000/api/triage/add-child', {
+      const res = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/triage/add-child', {
         method: 'POST',
         body: formData
       });
@@ -178,7 +178,7 @@ export default function CampTriageView() {
           });
         }
       } else {
-        const res2 = await fetch('http://localhost:8000/analyze', {
+        const res2 = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/analyze', {
           method: 'POST',
           body: formData
         });
@@ -209,7 +209,7 @@ export default function CampTriageView() {
   };
 
   const handlePrintSlip = (referralId) => {
-    window.open(`http://localhost:8000/api/referrals/${referralId}/slip.pdf`, '_blank');
+    window.open(`${import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com"}/api/referrals/${referralId}/slip.pdf`, '_blank');
   };
 
   return (

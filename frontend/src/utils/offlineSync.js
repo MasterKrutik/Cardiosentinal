@@ -68,7 +68,7 @@ export async function flushOfflineQueue() {
 
     if (records.length === 0) return { synced: 0, conflicts: 0 };
 
-    const res = await fetch('http://localhost:8000/api/triage/sync-offline', {
+    const res = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/triage/sync-offline', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ items: records })

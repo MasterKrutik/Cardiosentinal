@@ -263,7 +263,7 @@ export default function FamilyAskPage() {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 2500);
 
-      const res = await fetch('http://localhost:8000/api/family/ask', {
+      const res = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/family/ask', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         signal: controller.signal,

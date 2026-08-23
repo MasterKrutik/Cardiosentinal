@@ -33,7 +33,7 @@ export default function LandingPage() {
     let isMounted = true;
     async function fetchLiveCount() {
       try {
-        const res = await fetch('http://localhost:8000/api/triage/children');
+        const res = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/triage/children');
         if (res.ok) {
           const data = await res.json();
           if (isMounted && data.children && data.children.length > 0) {

@@ -21,7 +21,7 @@ export function LiveLocationProvider({ children }) {
   const fetchNarrative = useCallback(async (lat, lng, activeMode) => {
     setNarrativeLoading(true);
     try {
-      let url = `http://localhost:8000/api/location/local-narrative?mode=${activeMode}`;
+      let url = `${import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com"}/api/location/local-narrative?mode=${activeMode}`;
       if (activeMode === 'live' && lat != null && lng != null) {
         url += `&lat=${lat}&lng=${lng}`;
       }

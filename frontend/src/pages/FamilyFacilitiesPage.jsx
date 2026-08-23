@@ -179,7 +179,7 @@ export default function FamilyFacilitiesPage() {
 
   const fetchFacilities = async (lat, lng, modeVal) => {
     try {
-      const res = await fetch(`http://localhost:8000/api/family/nearest-facilities?lat=${lat}&lng=${lng}&districtId=dist-meghalaya-01&mode=${modeVal}`);
+      const res = await fetch(`${import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com"}/api/family/nearest-facilities?lat=${lat}&lng=${lng}&districtId=dist-meghalaya-01&mode=${modeVal}`);
       if (res.ok) {
         const data = await res.json();
         setDistrictTier(data.district_tier || []);
@@ -220,7 +220,7 @@ export default function FamilyFacilitiesPage() {
     setTeleconsultSuccessMsg('');
 
     try {
-      const res = await fetch('http://localhost:8000/api/family/teleconsult-request', {
+      const res = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/family/teleconsult-request', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

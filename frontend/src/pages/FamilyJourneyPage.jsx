@@ -23,8 +23,8 @@ export default function FamilyJourneyPage() {
     async function fetchData() {
       try {
         const [jRes, gRes] = await Promise.all([
-          fetch(`http://localhost:8000/api/family/journey/${childId || 'child-0121'}`),
-          fetch(`http://localhost:8000/api/family/guidance/${childId || 'child-0121'}`)
+          fetch(`${import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com"}/api/family/journey/${childId || 'child-0121'}`),
+          fetch(`${import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com"}/api/family/guidance/${childId || 'child-0121'}`)
         ]);
 
         if (jRes.ok) {
@@ -46,7 +46,7 @@ export default function FamilyJourneyPage() {
 
   const handleDownloadPdf = () => {
     const targetId = journey?.referral_id || childId || 'child-0121';
-    const url = `http://localhost:8000/api/referrals/${targetId}/slip.pdf`;
+    const url = `${import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com"}/api/referrals/${targetId}/slip.pdf`;
     const link = document.createElement('a');
     link.href = url;
     link.setAttribute('download', `Referral_Slip_${journey?.anonymized_code || 'CS-MEG-0121'}.pdf`);

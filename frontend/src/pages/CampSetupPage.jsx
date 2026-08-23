@@ -17,7 +17,7 @@ export default function CampSetupPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const campsRes = await fetch('http://localhost:8000/api/admin/camps');
+        const campsRes = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/admin/camps');
         if (campsRes.ok) {
           const data = await campsRes.json();
           setCamps(data);
@@ -38,7 +38,7 @@ export default function CampSetupPage() {
   const handleCreateCamp = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch('http://localhost:8000/api/admin/camps', {
+      const res = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/admin/camps', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -207,7 +207,7 @@ export default function CampSetupPage() {
 
                     <div className="flex items-center gap-2 shrink-0">
                       <a
-                        href={`http://localhost:8000/api/camps/${camp.id}/completion-report.pdf`}
+                        href={`${import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com"}/api/camps/${camp.id}/completion-report.pdf`}
                         target="_blank"
                         rel="noreferrer"
                         className="glass-button-secondary text-xs py-1.5 px-3 hover:border-[#4EB8E0]/40 text-[#E6EBF0] flex items-center gap-1.5"

@@ -29,7 +29,7 @@ export const useStore = create((set, get) => ({
     const user = get().user;
     if (user?.id) {
       try {
-        await fetch('http://localhost:8000/api/users/acknowledge-disclaimer', {
+        await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/users/acknowledge-disclaimer', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ user_id: user.id })

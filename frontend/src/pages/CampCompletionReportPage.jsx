@@ -40,13 +40,13 @@ export default function CampCompletionReportPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        const resSummary = await fetch('http://localhost:8000/api/admin/camp-quality?camp_id=camp-01');
+        const resSummary = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/admin/camp-quality?camp_id=camp-01');
         if (resSummary.ok) {
           const dataSummary = await resSummary.json();
           setReportSummary(dataSummary);
         }
 
-        const resReferrals = await fetch('http://localhost:8000/api/admin/camp-completion-referrals?camp_id=camp-01');
+        const resReferrals = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/admin/camp-completion-referrals?camp_id=camp-01');
         if (resReferrals.ok) {
           const dataReferrals = await resReferrals.json();
           if (dataReferrals && dataReferrals.length > 0) {
@@ -98,7 +98,7 @@ export default function CampCompletionReportPage() {
 
           <div className="flex flex-wrap items-center gap-3">
             <a
-              href="http://localhost:8000/api/camps/camp-01/completion-report.pdf"
+              href=(import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com") + "/api/camps/camp-01/completion-report.pdf"
               target="_blank"
               rel="noreferrer"
               className="glass-button bg-[#2C7FB8] hover:bg-[#2C7FB8]/80 text-white font-bold text-xs border border-[#4EB8E0]/50 shadow-lg shadow-black/50 transition-all cursor-pointer flex items-center gap-2 px-5 py-2.5 rounded-xl"
@@ -215,7 +215,7 @@ export default function CampCompletionReportPage() {
               </p>
             </div>
             <a
-              href="http://localhost:8000/api/camps/camp-01/completion-report.pdf"
+              href=(import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com") + "/api/camps/camp-01/completion-report.pdf"
               target="_blank"
               rel="noreferrer"
               className="text-xs text-[#4EB8E0] hover:text-white font-semibold flex items-center gap-1.5 font-mono hover:underline shrink-0"
@@ -302,7 +302,7 @@ export default function CampCompletionReportPage() {
                       {/* Action PDF */}
                       <td className="py-3.5 px-3 text-right">
                         <a
-                          href={`http://localhost:8000/api/referral/${item.anonymized_code}/pdf`}
+                          href={`${import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com"}/api/referral/${item.anonymized_code}/pdf`}
                           target="_blank"
                           rel="noreferrer"
                           className="px-3 py-1.5 rounded-lg bg-black/60 border border-white/10 hover:border-[#4EB8E0]/50 text-[#4EB8E0] hover:text-white font-semibold text-[11px] font-mono inline-flex items-center gap-1 transition-all"

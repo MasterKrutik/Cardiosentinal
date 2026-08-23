@@ -16,7 +16,7 @@ export default function DistrictAnomaliesPage() {
   useEffect(() => {
     async function fetchAnomalies() {
       try {
-        const res = await fetch('http://localhost:8000/api/district/anomaly-detection');
+        const res = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/district/anomaly-detection');
         if (res.ok) {
           const data = await res.json();
           setAnomalyData(data);
