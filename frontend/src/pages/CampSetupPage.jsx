@@ -2,8 +2,47 @@ import React, { useState, useEffect } from 'react';
 import DashboardShell from '../components/DashboardShell';
 import { Calendar, PlusCircle, UserCheck, School, CheckCircle2, Download, Clock, ShieldCheck, ArrowRight } from 'lucide-react';
 
+const FALLBACK_CAMPS = [
+  {
+    id: "camp-01",
+    school_name: "Pynthorumkhrah Govt Primary (Meghalaya)",
+    school_id: "sch-meg-01",
+    camp_date: "2026-08-15",
+    target_headcount: 120,
+    assigned_asha_worker_ids: "CS-MEG-01, CS-MEG-02",
+    status: "active"
+  },
+  {
+    id: "camp-02",
+    school_name: "Shillong St. Anthony School (Meghalaya)",
+    school_id: "sch-meg-02",
+    camp_date: "2026-08-22",
+    target_headcount: 150,
+    assigned_asha_worker_ids: "CS-MEG-01, CS-MEG-03",
+    status: "planned"
+  },
+  {
+    id: "camp-03",
+    school_name: "Chittoor Model Public School (Andhra Pradesh)",
+    school_id: "sch-ap-02",
+    camp_date: "2026-09-01",
+    target_headcount: 200,
+    assigned_asha_worker_ids: "CS-AP-01, CS-AP-02",
+    status: "planned"
+  },
+  {
+    id: "camp-04",
+    school_name: "Danapur Rural Govt School (Bihar)",
+    school_id: "sch-bih-02",
+    camp_date: "2026-09-10",
+    target_headcount: 90,
+    assigned_asha_worker_ids: "CS-BIH-01",
+    status: "planned"
+  }
+];
+
 export default function CampSetupPage() {
-  const [camps, setCamps] = useState([]);
+  const [camps, setCamps] = useState(FALLBACK_CAMPS);
   const [schools, setSchools] = useState([]);
   
   // Form State
@@ -20,10 +59,17 @@ export default function CampSetupPage() {
         const campsRes = await fetch((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/admin/camps');
         if (campsRes.ok) {
           const data = await campsRes.json();
-          setCamps(data);
+          if (Array.isArray(data) && data.length > 0) {
+            setCamps(data);
+          } else {
+            setCamps(FALLBACK_CAMPS);
+          }
+        } else {
+          setCamps(FALLBACK_CAMPS);
         }
       } catch (e) {
         console.error('Failed to fetch admin camps:', e);
+        setCamps(FALLBACK_CAMPS);
       }
     }
     fetchData();
