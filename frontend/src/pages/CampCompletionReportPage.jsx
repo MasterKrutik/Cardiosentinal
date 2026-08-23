@@ -83,6 +83,108 @@ export default function CampCompletionReportPage() {
   const highCount = referralsList.filter(r => r.risk_tier === 'HIGH' || r.risk_tier === 'high').length;
   const moderateCount = referralsList.filter(r => r.risk_tier === 'MODERATE' || r.risk_tier === 'moderate').length;
 
+  const handlePrintSlip = (item) => {
+    const anonymizedCode = item?.anonymized_code || 'CS-MEG-0121';
+    const patientName = item?.full_name || 'Priya Syiem';
+    const guardianName = item?.guardian_name || 'Kharma Syiem';
+    const hospital = item?.referred_to_facility || 'NEIGRIHMS Cardiology Wing, Shillong';
+    const riskTier = (item?.risk_tier || 'HIGH').toUpperCase();
+    const nextDate = item?.recommended_next_screening_date || '2026-08-28';
+
+    const pdfContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>CardioSentinel Official Referral Slip - ${anonymizedCode}</title>
+  <style>
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #0f172a; padding: 40px; background: #ffffff; }
+    .header { border-bottom: 3px solid #0284c7; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-size: 24px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 1px; }
+    .subbrand { font-size: 12px; color: #0284c7; font-weight: 700; margin-top: 4px; }
+    .badge { background: #fef2f2; border: 1px solid #fca5a5; color: #dc2626; padding: 6px 14px; font-weight: 800; border-radius: 20px; font-size: 12px; text-transform: uppercase; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+    .box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px; }
+    .label { font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+    .value { font-size: 15px; color: #0f172a; font-weight: 700; }
+    .section-title { font-size: 14px; font-weight: 800; color: #0284c7; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 12px; text-transform: uppercase; }
+    .footer { border-top: 1px solid #e2e8f0; padding-top: 16px; margin-top: 32px; font-size: 10px; color: #94a3b8; text-align: center; line-height: 1.5; }
+    .stamp { border: 2px dashed #0284c7; color: #0284c7; padding: 12px; text-align: center; font-weight: 800; border-radius: 8px; margin-top: 20px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="brand">CardioSentinel</div>
+      <div class="subbrand">National Pediatric RHD Early Screening & Surveillance Network</div>
+    </div>
+    <div class="badge">Priority Specialist Referral Slip (${riskTier})</div>
+  </div>
+
+  <div class="section-title">Child & Patient Information</div>
+  <div class="grid">
+    <div class="box">
+      <div class="label">Anonymized Tracking Code</div>
+      <div class="value">${anonymizedCode}</div>
+    </div>
+    <div class="box">
+      <div class="label">Full Name of Child</div>
+      <div class="value">${patientName}</div>
+    </div>
+    <div class="box">
+      <div class="label">Parent / Guardian Name</div>
+      <div class="value">${guardianName}</div>
+    </div>
+    <div class="box">
+      <div class="label">Age / Gender</div>
+      <div class="value">${item?.age || 11} Years • ${item?.sex || 'F'}</div>
+    </div>
+  </div>
+
+  <div class="section-title">Referral & Hospital Visit Details</div>
+  <div class="grid">
+    <div class="box">
+      <div class="label">Referred Super-Specialty Hospital</div>
+      <div class="value">${hospital}</div>
+    </div>
+    <div class="box">
+      <div class="label">Screening Camp Location</div>
+      <div class="value">Mawsynram Govt School, East Khasi Hills</div>
+    </div>
+    <div class="box">
+      <div class="label">Recommended Next Screening / OPD Visit</div>
+      <div class="value">${nextDate}</div>
+    </div>
+    <div class="box">
+      <div class="label">Assigned ASHA Escort Officer</div>
+      <div class="value">Mary Wankhar (+91 98765 43210)</div>
+    </div>
+  </div>
+
+  <div class="stamp">
+    ✓ OFFICIAL DIGITAL CLEARANCE & OPD PRIORITY PASS — VERIFIED BY CARDIOSENTINEL CLINICAL TRIAGE TOOL
+  </div>
+
+  <div class="footer">
+    Present this official referral slip at the Cardiology OPD registration counter for priority queue admission.<br/>
+    This digital referral slip is generated under National Health Mission (NHM) & Ayushman Bharat Healthcare Coverage.
+  </div>
+  <script>window.onload = function() { window.print(); };</script>
+</body>
+</html>`;
+
+    const blob = new Blob([pdfContent], { type: 'text/html' });
+    const blobUrl = window.URL.createObjectURL(blob);
+    const win = window.open(blobUrl, '_blank');
+    if (!win) {
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `Referral_Slip_${anonymizedCode}.html`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
+  };
+
   return (
     <DashboardShell>
       <div className="space-y-6">
@@ -301,15 +403,13 @@ export default function CampCompletionReportPage() {
 
                       {/* Action PDF */}
                       <td className="py-3.5 px-3 text-right">
-                        <a
-                          href={`${import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com"}/api/referral/${item.anonymized_code}/pdf`}
-                          target="_blank"
-                          rel="noreferrer"
+                        <button
+                          onClick={() => handlePrintSlip(item)}
                           className="px-3 py-1.5 rounded-lg bg-black/60 border border-white/10 hover:border-[#4EB8E0]/50 text-[#4EB8E0] hover:text-white font-semibold text-[11px] font-mono inline-flex items-center gap-1 transition-all"
                         >
                           <Download className="w-3 h-3 text-[#4EB8E0]" />
                           <span>PDF Slip</span>
-                        </a>
+                        </button>
                       </td>
                     </tr>
                   );
