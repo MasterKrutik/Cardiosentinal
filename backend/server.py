@@ -562,8 +562,26 @@ def init_db():
     conn.commit()
     conn.close()
 
-
 init_db()
+
+def check_and_auto_seed():
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM children")
+        count = cursor.fetchone()[0]
+        conn.close()
+        if count == 0:
+            print("🌱 DB is empty. Running seed_demo_20()...")
+            from seed_demo_20 import seed_demo_20
+            seed_demo_20()
+    except Exception as e:
+        print("Auto seed check failed:", e)
+
+check_and_auto_seed()
+
+
+
 
 from fastapi.staticfiles import StaticFiles
 import io
