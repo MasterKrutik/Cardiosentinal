@@ -136,7 +136,7 @@ const INITIAL_FACILITIES = [
     icu_beds_available: 2,
     pediatric_cardiac_beds_available: 1,
     estimated_echo_cost_range: "Free (Govt Scheme)",
-    verified_contact_number": "+913642226381",
+    verified_contact_number: "+913642226381",
     maps_url: "https://maps.google.com/?q=Shillong+Civil+Hospital",
     offers_teleconsultation: true
   },
@@ -156,7 +156,7 @@ const INITIAL_FACILITIES = [
     icu_beds_available: 3,
     pediatric_cardiac_beds_available: 2,
     estimated_echo_cost_range: "Free (Ayushman Bharat)",
-    verified_contact_number": "+913642224000",
+    verified_contact_number: "+913642224000",
     maps_url: "https://maps.google.com/?q=Ganesh+Das+Hospital+Shillong",
     offers_teleconsultation: true
   }
@@ -246,18 +246,16 @@ export default function FamilyFacilitiesPage() {
       const res = await fetch(`${import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com"}/api/family/nearest-facilities?lat=${lat}&lng=${lng}&districtId=dist-meghalaya-01&mode=${modeVal}`);
       if (res.ok) {
         const data = await res.json();
-        setDistrictTier(data.district_tier || []);
-        setStateTier(data.state_tier || []);
-        setNationalTier(data.national_tier || []);
-        setAllFacilities(data.all_facilities || []);
-        setDetectedCity(data.detected_city || 'Shillong');
-        setHomeState(data.home_state || 'Meghalaya');
-        setIsOutOfDistrict(data.is_out_of_district || false);
-        
-        if (data.district_tier && data.district_tier.length > 0) {
-          setSelectedFacilityId(data.district_tier[0].id);
-        } else if (data.all_facilities && data.all_facilities.length > 0) {
+        if (data.all_facilities && data.all_facilities.length > 0) {
+          setDistrictTier(data.district_tier || [INITIAL_FACILITIES[1]]);
+          setStateTier(data.state_tier || [INITIAL_FACILITIES[0]]);
+          setNationalTier(data.national_tier || [INITIAL_FACILITIES[0]]);
+          setAllFacilities(data.all_facilities);
+          setDetectedCity(data.detected_city || 'Shillong');
+          setHomeState(data.home_state || 'Meghalaya');
+          setIsOutOfDistrict(data.is_out_of_district || false);
           setSelectedFacilityId(data.all_facilities[0].id);
+          return;
         }
       }
     } catch (e) {
@@ -265,6 +263,12 @@ export default function FamilyFacilitiesPage() {
     } finally {
       setLoading(false);
     }
+    // Fail-Safe Fallback: If API returns 0 facilities or fails, populates default Shillong/Pan-India facilities!
+    setDistrictTier([INITIAL_FACILITIES[1]]);
+    setStateTier([INITIAL_FACILITIES[0], INITIAL_FACILITIES[2]]);
+    setNationalTier([INITIAL_FACILITIES[0]]);
+    setAllFacilities(INITIAL_FACILITIES);
+    setSelectedFacilityId('fac-01');
   };
 
   const handleSelectFacility = (fac) => {
