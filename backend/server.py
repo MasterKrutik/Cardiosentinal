@@ -592,6 +592,21 @@ def read_root():
         "health": "OK"
     }
 
+@app.get("/api/seed")
+@app.post("/api/seed")
+def force_seed_endpoint():
+    try:
+        from seed_demo_20 import seed_demo_20
+        seed_demo_20()
+        return {
+            "status": "success",
+            "message": "Database successfully seeded with 20 curated demo children and parent portal credentials!",
+            "demo_parent_phone": "9876543210",
+            "demo_parent_pin": "1234"
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
+
 @app.on_event("startup")
 def auto_seed_if_empty():
     try:
