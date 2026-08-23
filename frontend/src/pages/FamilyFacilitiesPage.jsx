@@ -216,7 +216,7 @@ const FALLBACK_FACILITIES = [
     current_queue_length: 6,
     offers_teleconsultation: false,
     maps_url: "https://maps.google.com/?q=Shillong+Civil+Hospital",
-    verified_contact_number": "+913642224100"
+    verified_contact_number: "+913642224100"
   },
   {
     id: "fac-03",
@@ -236,7 +236,7 @@ const FALLBACK_FACILITIES = [
     current_queue_length: 2,
     offers_teleconsultation: true,
     maps_url: "https://maps.google.com/?q=Woodland+Hospital+Shillong",
-    verified_contact_number": "+913642225219"
+    verified_contact_number: "+913642225219"
   },
   {
     id: "fac-04",
@@ -256,7 +256,7 @@ const FALLBACK_FACILITIES = [
     current_queue_length: 12,
     offers_teleconsultation: true,
     maps_url: "https://maps.google.com/?q=GMCH+Guwahati",
-    verified_contact_number": "+913612529457"
+    verified_contact_number: "+913612529457"
   },
   {
     id: "fac-05",
@@ -276,7 +276,7 @@ const FALLBACK_FACILITIES = [
     current_queue_length: 24,
     offers_teleconsultation: true,
     maps_url: "https://maps.google.com/?q=AIIMS+New+Delhi",
-    verified_contact_number": "+911126588500"
+    verified_contact_number: "+911126588500"
   }
 ];
 
