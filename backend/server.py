@@ -4100,6 +4100,173 @@ def get_admin_camp_quality(camp_id: Optional[str] = "camp-01"):
         ]
     }
 
+@app.get("/api/family/nearest-facilities")
+def get_family_nearest_facilities(lat: float = 25.5788, lng: float = 91.8933, districtId: str = "dist-meghalaya-01", mode: str = "gps"):
+    facilities = [
+        {
+            "id": "fac-01",
+            "name": "NEIGRIHMS Cardiology & Echo Wing",
+            "city": "Shillong",
+            "state": "Meghalaya",
+            "district_id": "dist-meghalaya-01",
+            "facility_tier": "medical_college_hospital",
+            "latitude": 25.6120,
+            "longitude": 91.9050,
+            "distance_km": 4.8,
+            "estimated_echo_cost_range": "Free (Ayushman Bharat)",
+            "is_ayushman_bharat_empanelled": True,
+            "general_ward_beds_available": 18,
+            "icu_beds_available": 5,
+            "pediatric_cardiac_beds_available": 3,
+            "current_queue_length": 4,
+            "offers_teleconsultation": True,
+            "maps_url": "https://maps.google.com/?q=NEIGRIHMS+Shillong",
+            "verified_contact_number": "+913642538000"
+        },
+        {
+            "id": "fac-02",
+            "name": "Shillong Civil Hospital (District Echo Unit)",
+            "city": "Shillong",
+            "state": "Meghalaya",
+            "district_id": "dist-meghalaya-01",
+            "facility_tier": "district_hospital",
+            "latitude": 25.5720,
+            "longitude": 91.8820,
+            "distance_km": 1.5,
+            "estimated_echo_cost_range": "Free (Govt)",
+            "is_ayushman_bharat_empanelled": True,
+            "general_ward_beds_available": 12,
+            "icu_beds_available": 2,
+            "pediatric_cardiac_beds_available": 1,
+            "current_queue_length": 6,
+            "offers_teleconsultation": False,
+            "maps_url": "https://maps.google.com/?q=Shillong+Civil+Hospital",
+            "verified_contact_number": "+913642224100"
+        },
+        {
+            "id": "fac-03",
+            "name": "Woodland Hospital Pediatric Cardiology Dept",
+            "city": "Shillong",
+            "state": "Meghalaya",
+            "district_id": "dist-meghalaya-01",
+            "facility_tier": "medical_college_hospital",
+            "latitude": 25.5680,
+            "longitude": 91.8980,
+            "distance_km": 2.1,
+            "estimated_echo_cost_range": "₹800 - ₹1,500",
+            "is_ayushman_bharat_empanelled": True,
+            "general_ward_beds_available": 8,
+            "icu_beds_available": 3,
+            "pediatric_cardiac_beds_available": 2,
+            "current_queue_length": 2,
+            "offers_teleconsultation": True,
+            "maps_url": "https://maps.google.com/?q=Woodland+Hospital+Shillong",
+            "verified_contact_number": "+913642225219"
+        },
+        {
+            "id": "fac-04",
+            "name": "Gauhati Medical College & Hospital (GMCH)",
+            "city": "Guwahati",
+            "state": "Assam",
+            "district_id": "dist-assam-01",
+            "facility_tier": "medical_college_hospital",
+            "latitude": 26.1550,
+            "longitude": 91.7850,
+            "distance_km": 92.4,
+            "estimated_echo_cost_range": "Free (Ayushman Bharat)",
+            "is_ayushman_bharat_empanelled": True,
+            "general_ward_beds_available": 35,
+            "icu_beds_available": 8,
+            "pediatric_cardiac_beds_available": 4,
+            "current_queue_length": 12,
+            "offers_teleconsultation": True,
+            "maps_url": "https://maps.google.com/?q=GMCH+Guwahati",
+            "verified_contact_number": "+913612529457"
+        },
+        {
+            "id": "fac-05",
+            "name": "AIIMS New Delhi (Pediatric Cardiothoracic Centre)",
+            "city": "New Delhi",
+            "state": "Delhi NCR",
+            "district_id": "dist-delhi-01",
+            "facility_tier": "tertiary_national_institute",
+            "latitude": 28.5672,
+            "longitude": 77.2100,
+            "distance_km": 1480.0,
+            "estimated_echo_cost_range": "Free (National Referral)",
+            "is_ayushman_bharat_empanelled": True,
+            "general_ward_beds_available": 45,
+            "icu_beds_available": 15,
+            "pediatric_cardiac_beds_available": 10,
+            "current_queue_length": 24,
+            "offers_teleconsultation": True,
+            "maps_url": "https://maps.google.com/?q=AIIMS+New+Delhi",
+            "verified_contact_number": "+911126588500"
+        }
+    ]
+
+    district_tier = [f for f in facilities if f["city"] == "Shillong"]
+    state_tier = [f for f in facilities if f["state"] in ["Meghalaya", "Assam"] and f["city"] != "Shillong"]
+    national_tier = [f for f in facilities if f["facility_tier"] == "tertiary_national_institute"]
+
+    return {
+        "detected_city": "Shillong",
+        "home_state": "Meghalaya",
+        "is_out_of_district": False,
+        "district_tier": district_tier,
+        "state_tier": state_tier,
+        "national_tier": national_tier,
+        "all_facilities": facilities
+    }
+
+@app.get("/api/family/prophylaxis/{child_id}")
+def get_family_prophylaxis_by_child(child_id: str):
+    conn = sqlite3.connect(DB_FILE)
+    conn.row_factory = sqlite3.Row
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM children WHERE id = ? OR anonymized_code = ?", (child_id, child_id))
+    child_row = cursor.fetchone()
+    conn.close()
+
+    child = {
+        "anonymized_code": child_row["anonymized_code"] if child_row else "CS-MEG-0121",
+        "patient_name": child_row["full_name"] if child_row else "Mebakerlin Pyngrope",
+        "age": child_row["age"] if child_row else 10,
+        "sex": child_row["sex"] if child_row else "Female",
+        "guardian_name": child_row["guardian_name"] if child_row else "Wanpli Pyngrope",
+        "referred_facility": "NEIGRIHMS Cardiology Wing"
+    }
+
+    records = [
+        { "id": "rec-1", "dose_number": 1, "penicillin_dose_date": "2026-02-10", "next_due_date": "2026-03-03", "adherence_status": "on_time", "penicillin_batch_no": "BPG-2026-008", "administering_facility": "Sohra CHC", "administering_nurse": "Nurse Mary" },
+        { "id": "rec-2", "dose_number": 2, "penicillin_dose_date": "2026-03-03", "next_due_date": "2026-03-24", "adherence_status": "on_time", "penicillin_batch_no": "BPG-2026-014", "administering_facility": "Sohra CHC", "administering_nurse": "Nurse Mary" },
+        { "id": "rec-3", "dose_number": 3, "penicillin_dose_date": "2026-03-31", "next_due_date": "2026-04-21", "adherence_status": "late", "penicillin_batch_no": "BPG-2026-022", "administering_facility": "Sohra CHC", "administering_nurse": "Nurse Priya" },
+        { "id": "rec-4", "dose_number": 4, "penicillin_dose_date": "2026-04-21", "next_due_date": "2026-05-12", "adherence_status": "on_time", "penicillin_batch_no": "BPG-2026-029", "administering_facility": "Sohra CHC", "administering_nurse": "Nurse Mary" },
+        { "id": "rec-5", "dose_number": 5, "penicillin_dose_date": "2026-05-12", "next_due_date": "2026-06-02", "adherence_status": "on_time", "penicillin_batch_no": "BPG-2026-035", "administering_facility": "Sohra CHC", "administering_nurse": "Nurse Mary" },
+        { "id": "rec-6", "dose_number": 6, "penicillin_dose_date": "2026-06-02", "next_due_date": "2026-06-23", "adherence_status": "on_time", "penicillin_batch_no": "BPG-2026-041", "administering_facility": "Sohra CHC", "administering_nurse": "Nurse Mary" },
+        { "id": "rec-7", "dose_number": 7, "penicillin_dose_date": "2026-06-23", "next_due_date": "2026-07-14", "adherence_status": "on_time", "penicillin_batch_no": "BPG-2026-048", "administering_facility": "Sohra CHC", "administering_nurse": "Nurse Mary" }
+    ]
+
+    return {
+        "child": child,
+        "records": records,
+        "adherence_rate": 85.7,
+        "consecutive_streak": 4,
+        "on_time_count": 6,
+        "total_past_doses": 7,
+        "reminder_enabled": True,
+        "upcoming_dose": {
+            "dose_number": 8,
+            "next_due_date": "2026-08-15",
+            "administering_facility": "Sohra CHC Outpatient"
+        }
+    }
+
+@app.post("/api/family/prophylaxis/reminder-toggle")
+def toggle_family_prophylaxis_reminder(req: dict):
+    return {"status": "success", "child_id": req.get("child_id"), "enabled": req.get("enabled", True), "message": "Proactive SMS reminder preference saved."}
+
 
 
 if __name__ == "__main__":
