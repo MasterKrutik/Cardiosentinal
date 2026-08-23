@@ -98,7 +98,7 @@ export default function CampCompletionReportPage() {
 
           <div className="flex flex-wrap items-center gap-3">
             <a
-              href=(import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com") + "/api/camps/camp-01/completion-report.pdf"
+              href={(import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com") + "/api/camps/camp-01/completion-report.pdf"}
               target="_blank"
               rel="noreferrer"
               className="glass-button bg-[#2C7FB8] hover:bg-[#2C7FB8]/80 text-white font-bold text-xs border border-[#4EB8E0]/50 shadow-lg shadow-black/50 transition-all cursor-pointer flex items-center gap-2 px-5 py-2.5 rounded-xl"
@@ -215,7 +215,7 @@ export default function CampCompletionReportPage() {
               </p>
             </div>
             <a
-              href=(import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com") + "/api/camps/camp-01/completion-report.pdf"
+              href={(import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com") + "/api/camps/camp-01/completion-report.pdf"}
               target="_blank"
               rel="noreferrer"
               className="text-xs text-[#4EB8E0] hover:text-white font-semibold flex items-center gap-1.5 font-mono hover:underline shrink-0"
