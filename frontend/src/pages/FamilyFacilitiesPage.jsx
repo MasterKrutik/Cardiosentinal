@@ -98,18 +98,81 @@ const createFacilityIcon = (facilityTier, isSelected) => {
   });
 };
 
+const INITIAL_FACILITIES = [
+  {
+    id: "fac-01",
+    name: "NEIGRIHMS Cardiology Wing",
+    facility_tier: "tertiary_national_institute",
+    city: "Shillong",
+    state: "Meghalaya",
+    district_id: "dist-meghalaya-01",
+    latitude: 25.6022,
+    longitude: 91.9056,
+    distance_km: 4.2,
+    is_ayushman_bharat_empanelled: true,
+    current_queue_length: 6,
+    general_ward_beds_available: 18,
+    icu_beds_available: 4,
+    pediatric_cardiac_beds_available: 2,
+    estimated_echo_cost_range: "Free (Ayushman Bharat)",
+    verified_contact_number: "+913642538000",
+    maps_url: "https://maps.google.com/?q=NEIGRIHMS+Shillong",
+    offers_teleconsultation: true
+  },
+  {
+    id: "fac-02",
+    name: "Shillong Civil Hospital",
+    facility_tier: "district_hospital",
+    city: "Shillong",
+    state: "Meghalaya",
+    district_id: "dist-meghalaya-01",
+    latitude: 25.5721,
+    longitude: 91.8845,
+    distance_km: 1.8,
+    is_ayushman_bharat_empanelled: true,
+    current_queue_length: 12,
+    general_ward_beds_available: 10,
+    icu_beds_available: 2,
+    pediatric_cardiac_beds_available: 1,
+    estimated_echo_cost_range: "Free (Govt Scheme)",
+    verified_contact_number": "+913642226381",
+    maps_url: "https://maps.google.com/?q=Shillong+Civil+Hospital",
+    offers_teleconsultation: true
+  },
+  {
+    id: "fac-03",
+    name: "Ganesh Das MCH Hospital",
+    facility_tier: "medical_college_hospital",
+    city: "Shillong",
+    state: "Meghalaya",
+    district_id: "dist-meghalaya-01",
+    latitude: 25.5890,
+    longitude: 91.8980,
+    distance_km: 2.5,
+    is_ayushman_bharat_empanelled: true,
+    current_queue_length: 4,
+    general_ward_beds_available: 15,
+    icu_beds_available: 3,
+    pediatric_cardiac_beds_available: 2,
+    estimated_echo_cost_range: "Free (Ayushman Bharat)",
+    verified_contact_number": "+913642224000",
+    maps_url: "https://maps.google.com/?q=Ganesh+Das+Hospital+Shillong",
+    offers_teleconsultation: true
+  }
+];
+
 export default function FamilyFacilitiesPage() {
-  const [districtTier, setDistrictTier] = useState([]);
-  const [stateTier, setStateTier] = useState([]);
-  const [nationalTier, setNationalTier] = useState([]);
-  const [allFacilities, setAllFacilities] = useState([]);
+  const [districtTier, setDistrictTier] = useState([INITIAL_FACILITIES[1]]);
+  const [stateTier, setStateTier] = useState([INITIAL_FACILITIES[0], INITIAL_FACILITIES[2]]);
+  const [nationalTier, setNationalTier] = useState([INITIAL_FACILITIES[0]]);
+  const [allFacilities, setAllFacilities] = useState(INITIAL_FACILITIES);
   const [detectedCity, setDetectedCity] = useState('Shillong');
   const [homeState, setHomeState] = useState('Meghalaya');
   const [activeMode, setActiveMode] = useState('gps');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [userCoords, setUserCoords] = useState(null);
   const [isOutOfDistrict, setIsOutOfDistrict] = useState(false);
-  const [selectedFacilityId, setSelectedFacilityId] = useState(null);
+  const [selectedFacilityId, setSelectedFacilityId] = useState('fac-01');
 
   // Teleconsultation Modal State
   const [teleconsultFacility, setTeleconsultFacility] = useState(null);

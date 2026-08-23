@@ -4,13 +4,60 @@ import translations from '../i18n/translations.json';
 import { HeartPulse, Globe, Calendar, Clock, MapPin, MessageSquare, ShieldCheck, CheckCircle2, AlertTriangle, AlertCircle, FileText, ArrowRight, ShieldAlert, Syringe } from 'lucide-react';
 
 
+const FALLBACK_JOURNEY = {
+  child_id: "child-0121",
+  anonymized_code: "CS-MAW-1949",
+  full_name: "Chodavadiya Jesmin Dipakbhai",
+  guardian_name: "Chodavadiya Dipakbhai",
+  age: 14,
+  sex: "Male",
+  risk_tier: "high",
+  calibrated_probability: 0.98,
+  referred_to_facility: "NEIGRIHMS Cardiology Wing",
+  active_step: 3,
+  step_label: "Step 3 of 4 — Active Specialist Referral Pending",
+  progress_percentage: 75,
+  screening_date: "July 12, 2026",
+  triage_date: "July 12, 2026",
+  referral_date: "July 14, 2026",
+  prophylaxis_due_date: "August 15, 2026",
+  referral_id: "ch-101"
+};
+
+const FALLBACK_GUIDANCE_CARDS = [
+  {
+    id: "g-1",
+    severity: "urgent",
+    title: "Hospital Specialist Appointment Recommended",
+    message: "Screening acoustic analysis flagged soft valve sound variation. Please visit NEIGRIHMS Cardiology Wing within 7 days for echocardiography.",
+    action_text: "View Nearest Cardiology Hospitals",
+    type: "hospital_referral"
+  },
+  {
+    id: "g-2",
+    severity: "warning",
+    title: "Download Official Referral Slip (PDF)",
+    message: "Bring the digital or printed referral slip to your hospital visit for priority registration at the cardiology OPD.",
+    action_text: "Download Referral Slip PDF",
+    type: "referral_slip"
+  },
+  {
+    id: "g-3",
+    severity: "routine",
+    title: "Secondary Prophylaxis Injection Schedule",
+    message: "Penicillin G Benzathine protects heart valves against recurrent rheumatic fever. Injection due every 3-4 weeks.",
+    action_text: "View Injection Record",
+    type: "prophylaxis_reminder"
+  }
+];
+
 export default function FamilyJourneyPage() {
   const { childId } = useParams();
   const navigate = useNavigate();
   const [lang, setLang] = useState(localStorage.getItem('family_language') || 'en');
-  const [journey, setJourney] = useState(null);
-  const [guidanceCards, setGuidanceCards] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [journey, setJourney] = useState(FALLBACK_JOURNEY);
+  const [guidanceCards, setGuidanceCards] = useState(FALLBACK_GUIDANCE_CARDS);
+  const [loading, setLoading] = useState(false);
 
   const handleLangChange = (newLang) => {
     setLang(newLang);
@@ -29,11 +76,13 @@ export default function FamilyJourneyPage() {
 
         if (jRes.ok) {
           const jData = await jRes.json();
-          setJourney(jData);
+          if (jData && jData.full_name) setJourney(jData);
         }
         if (gRes.ok) {
           const gData = await gRes.json();
-          setGuidanceCards(gData.guidance_cards || []);
+          if (gData && gData.guidance_cards && gData.guidance_cards.length > 0) {
+            setGuidanceCards(gData.guidance_cards);
+          }
         }
       } catch (e) {
         console.error('Failed to load family journey data:', e);
