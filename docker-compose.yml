@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: cardiosentinel-postgres
+    environment:
+      POSTGRES_DB: cardio_sentinel_dev
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  ml-service:
+    build: ./ml-service
+    container_name: cardiosentinel-ml-service
+    ports:
+      - "8001:8001"
+    environment:
+      - PORT=8001
+    depends_on:
+      - postgres
+
+  backend:
+    build: ./backend
+    container_name: cardiosentinel-backend
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - DATABASE_URL=ecto://postgres:postgrespassword@postgres:5432/cardio_sentinel_dev
+      - ML_SERVICE_URL=http://ml-service:8001
+    depends_on:
+      - postgres
+      - ml-service
+
+  frontend:
+    build: ./frontend
+    container_name: cardiosentinel-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:

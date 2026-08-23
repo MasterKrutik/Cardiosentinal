@@ -1,0 +1,41 @@
+{
+  "en": {
+    "title": "My Child's Health Journey",
+    "subtitle": "CardioSentinel School Health Triage & Care Tracker",
+    "step_screening": "School Health Camp Screening Completed",
+    "step_triage": "AI & Clinical Triage Evaluation",
+    "step_referral": "Echocardiogram Referral Slip Issued",
+    "step_hospital": "Hospital Checkup & Echo Evaluation",
+    "step_prophylaxis": "Secondary Prophylaxis Injection Schedule",
+    "next_steps_title": "Personalized Next Steps",
+    "ask_assistant_title": "Ask CardioSentinel Family Assistant",
+    "ask_placeholder": "Type or ask a question in your language...",
+    "disclaimer": "CardioSentinel is a triage referral tool, not a diagnosis. Please consult your clinician at your hospital visit."
+  },
+  "hi": {
+    "title": "मेरे बच्चे की स्वास्थ्य यात्रा",
+    "subtitle": "कार्डियोसेंटिनल स्कूल स्वास्थ्य स्क्रीनिंग और देखभाल ट्रैकर",
+    "step_screening": "स्कूल स्वास्थ्य शिविर स्क्रीनिंग पूर्ण",
+    "step_triage": "एआई और नैदानिक ट्राइएज मूल्यांकन",
+    "step_referral": "इकोकार्डियोग्राम रेफरल पर्ची जारी की गई",
+    "step_hospital": "अस्पताल जांच और इको मूल्यांकन",
+    "step_prophylaxis": "द्वितीयक पेनिसिलिन इंजेक्शन अनुसूची",
+    "next_steps_title": "व्यक्तिगत अगले कदम",
+    "ask_assistant_title": "कार्डियोसेंटिनल परिवार सहायक से पूछें",
+    "ask_placeholder": "अपनी भाषा में प्रश्न पूछें...",
+    "disclaimer": "कार्डियोसेंटिनल एक ट्राइएज रेफरल टूल है, निदान नहीं। कृपया अपने डॉक्टर से परामर्श करें।"
+  },
+  "kh": {
+    "title": "Ka Jingtuid Jingkoit Jingkhiah I Khun",
+    "subtitle": "CardioSentinel School Health Triage & Care Tracker",
+    "step_screening": "Jingscreen ha Skul Health Camp Lah Dep",
+    "step_triage": "Jingkhein Risk Tier AI & Clinical Evaluation",
+    "step_referral": "Pha Jingtyrwa Echocardiogram Referral Slip",
+    "step_hospital": "Jingleit Kynduh Doctor ha Hospital",
+    "step_prophylaxis": "Jingai Injection Penicillin Schedule",
+    "next_steps_title": "Jingbthah Sa Ba Kynduh Doctor",
+    "ask_assistant_title": "Kylli Ha CardioSentinel Family Assistant",
+    "ask_placeholder": "Kylli jingkylli ha ka ktien jong phi...",
+    "disclaimer": "Ka CardioSentinel ka dei ka buit referral triage, ym ka diagnosis. Leit kynduh ia u doctor."
+  }
+}
