@@ -257,7 +257,7 @@ DEMO_STUDENTS = [
 ]
 
 def seed_demo_20():
-    print("[SEED] Seeding Curated 20-Student Demo Dataset (Addendum 23 & 24)...")
+    print("✨ Seeding Curated 20-Student Demo Dataset (Addendum 23 & 24)...")
     from server import init_db
     init_db()
     conn = sqlite3.connect(DB_FILE, timeout=30.0)
@@ -468,7 +468,7 @@ def seed_demo_20():
 
     conn.commit()
     conn.close()
-    print(f"[SEED] Successfully seeded exactly {len(DEMO_STUDENTS)} curated demo children with 2026 prophylaxis date math!")
+    print(f"✅ Successfully seeded exactly {len(DEMO_STUDENTS)} curated demo children with 2026 prophylaxis date math!")
 
 if __name__ == "__main__":
     seed_demo_20()
