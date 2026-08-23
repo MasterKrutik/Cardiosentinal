@@ -583,6 +583,15 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+@app.get("/")
+def read_root():
+    return {
+        "status": "online",
+        "service": "CardioSentinel Phoenix API Bridge",
+        "docs_url": "/docs",
+        "health": "OK"
+    }
+
 app.mount("/static", StaticFiles(directory=STATIC_AUDIO_DIR), name="static")
 
 def extract_real_audio_features(audio_bytes: bytes, filename: str):

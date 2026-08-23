@@ -79,6 +79,15 @@ class FederatedRequest(BaseModel):
     num_rounds: int = 10
     epsilon: float = 1.0
 
+@app.get("/")
+def read_root():
+    return {
+        "status": "online",
+        "service": "CardioSentinel ML Microservice",
+        "docs_url": "/docs",
+        "health": "/health"
+    }
+
 @app.get("/health")
 def health_check():
     return {
