@@ -583,63 +583,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-@app.get("/")
-def read_root():
-    return {
-        "status": "online",
-        "service": "CardioSentinel Phoenix API Bridge",
-        "docs_url": "/docs",
-        "health": "OK"
-    }
-
-@app.get("/api/seed")
-@app.post("/api/seed")
-def force_seed_endpoint():
-    try:
-        from seed_demo_20 import seed_demo_20
-        seed_demo_20()
-        return {
-            "status": "success",
-            "message": "Database successfully seeded with 20 curated demo children and parent portal credentials!",
-            "demo_parent_phone": "9876543210",
-            "demo_parent_pin": "1234"
-        }
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
-
-@app.on_event("startup")
-def auto_seed_if_empty():
-    try:
-        conn = sqlite3.connect(DB_FILE, timeout=30.0)
-        cursor = conn.cursor()
-        
-        # 1. Ensure RBAC Users Exist
-        cursor.execute("SELECT COUNT(*) FROM users")
-        user_count = cursor.fetchone()[0]
-        if user_count == 0:
-            print("🌱 DB users empty. Inserting default RBAC users...")
-            demo_users = [
-                ("user-asha-01", "ASHA Worker Kavita Devi", "asha@cardiosentinel.org", "$2b$12$7k.Tj9/H/v64tA2gC4O33u7.yO.0e.mYyL6k4G0S/N/15.g9bO.m", "asha_worker", "dist-meghalaya-01", 1),
-                ("user-admin-01", "Dr. Rajesh Sharma (Camp Admin)", "admin@cardiosentinel.org", "$2b$12$7k.Tj9/H/v64tA2gC4O33u7.yO.0e.mYyL6k4G0S/N/15.g9bO.m", "school_camp_admin", "dist-ap-01", 1),
-                ("user-dho-01", "Dr. Priya Sundaram (DHO)", "district@cardiosentinel.org", "$2b$12$7k.Tj9/H/v64tA2gC4O33u7.yO.0e.mYyL6k4G0S/N/15.g9bO.m", "district_health_officer", "dist-bihar-01", 1),
-                ("user-super-01", "System Admin", "super@cardiosentinel.org", "$2b$12$7k.Tj9/H/v64tA2gC4O33u7.yO.0e.mYyL6k4G0S/N/15.g9bO.m", "super_admin", "dist-meghalaya-01", 1)
-            ]
-            cursor.executemany("INSERT OR IGNORE INTO users VALUES (?,?,?,?,?,?,?,CURRENT_TIMESTAMP)", demo_users)
-            conn.commit()
-
-        # 2. Check Children Records
-        cursor.execute("SELECT COUNT(*) FROM children")
-        child_count = cursor.fetchone()[0]
-        conn.close()
-
-        if child_count == 0:
-            print("🌱 Children records empty! Executing seed_demo_20...")
-            from seed_demo_20 import seed_demo_20
-            seed_demo_20()
-            print("✅ Auto-seeding completed successfully on startup!")
-    except Exception as e:
-        print("Auto-seed error on startup:", e)
-
 app.mount("/static", StaticFiles(directory=STATIC_AUDIO_DIR), name="static")
 
 def extract_real_audio_features(audio_bytes: bytes, filename: str):

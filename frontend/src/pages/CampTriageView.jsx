@@ -101,7 +101,7 @@ export default function CampTriageView() {
     setVoiceExtracting(true);
     setVoiceError(null);
     try {
-      const res = await fetch(((import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com')) + '/voice/extract-jones-criteria', {
+      const res = await fetch('http://localhost:8001/voice/extract-jones-criteria', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ transcript_text: voiceText })

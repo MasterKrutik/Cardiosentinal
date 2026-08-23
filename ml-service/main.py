@@ -36,19 +36,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Merge full backend endpoints (triage queue, family portal, ASHA worker, PDF referrals)
-import sys
-_backend_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend"))
-if _backend_dir not in sys.path:
-    sys.path.insert(0, _backend_dir)
-
-try:
-    from server import app as backend_app
-    app.include_router(backend_app.router)
-    print("Successfully merged full backend endpoints into ML microservice!")
-except Exception as _e:
-    print(f"Note: backend.server router merge: {_e}")
-
 # Initialize pipeline modules
 hsmm_segmenter = HSMMHeartSoundSegmenter()
 bernoulli_extractor = BernoulliPhysicsExtractor()
@@ -91,47 +78,6 @@ class SimulationRequest(BaseModel):
 class FederatedRequest(BaseModel):
     num_rounds: int = 10
     epsilon: float = 1.0
-
-@app.get("/")
-def read_root():
-    return {
-        "status": "online",
-        "service": "CardioSentinel ML Microservice",
-        "docs_url": "/docs",
-        "health": "/health"
-    }
-
-@app.on_event("startup")
-def ml_startup_auto_seed():
-    try:
-        import sqlite3
-        db_file = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "backend", "cardiosentinel.db"))
-        if not os.path.exists(os.path.dirname(db_file)):
-            os.makedirs(os.path.dirname(db_file), exist_ok=True)
-            
-        conn = sqlite3.connect(db_file, timeout=30.0)
-        cursor = conn.cursor()
-        
-        cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='children'")
-        tbl_exists = cursor.fetchone()
-        if not tbl_exists:
-            conn.close()
-            from server import init_db
-            init_db()
-            conn = sqlite3.connect(db_file, timeout=30.0)
-            cursor = conn.cursor()
-            
-        cursor.execute("SELECT COUNT(*) FROM children")
-        child_count = cursor.fetchone()[0]
-        conn.close()
-
-        if child_count == 0:
-            print("🌱 Children records empty on ML service start! Running seed_demo_20...")
-            from seed_demo_20 import seed_demo_20
-            seed_demo_20()
-            print("Auto-seeding completed successfully on ML service startup!")
-    except Exception as e:
-        print("ML Startup auto-seed check note:", e)
 
 @app.get("/health")
 def health_check():
