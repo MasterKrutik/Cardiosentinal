@@ -19,7 +19,7 @@ from explanation_agent import AIExplanationAgent
 DB_FILE = os.path.abspath(os.path.join(os.path.dirname(__file__), "cardiosentinel.db"))
 
 def run_seed():
-    print("🌱 Running CardioSentinel Literature-Calibrated Seed Script (Addendum Fix 5)...")
+    print("[SEED] Running CardioSentinel Literature-Calibrated Seed Script (Addendum Fix 5)...")
     from server import init_db
     init_db()
     conn = sqlite3.connect(DB_FILE)
@@ -575,8 +575,8 @@ def run_seed():
     recompute_screening_intervals()
     updated = refresh_district_snapshots_job()
 
-    print(f"🎉 Successfully seeded {child_count} children across {len(camps)} camps and {len(districts)} districts!")
-    print(f"📊 Refreshed district surveillance snapshots for {updated} districts.")
+    print(f"[SEED] Successfully seeded {child_count} children across {len(camps)} camps and {len(districts)} districts!")
+    print(f"[SEED] Refreshed district surveillance snapshots for {updated} districts.")
 
 if __name__ == "__main__":
     run_seed()

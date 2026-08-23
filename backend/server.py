@@ -563,7 +563,23 @@ def init_db():
     conn.close()
 
 
+def auto_seed_if_empty():
+    try:
+        conn = sqlite3.connect(DB_FILE)
+        cursor = conn.cursor()
+        cursor.execute("SELECT COUNT(*) FROM children")
+        row = cursor.fetchone()
+        count = row[0] if row else 0
+        conn.close()
+        if count == 0:
+            print("🌱 Database is empty on startup. Triggering initial seed...")
+            import seed_data
+            seed_data.run_seed()
+    except Exception as e:
+        print(f"Auto-seed notification: {e}")
+
 init_db()
+auto_seed_if_empty()
 
 from fastapi.staticfiles import StaticFiles
 import io
@@ -591,6 +607,15 @@ def read_root():
         "docs_url": "/docs",
         "health": "OK"
     }
+
+@app.api_route("/api/seed", methods=["GET", "POST"])
+def trigger_seed():
+    try:
+        import seed_data
+        seed_data.run_seed()
+        return {"status": "success", "message": "Database seeded successfully with literature-calibrated demo cohort!"}
+    except Exception as e:
+        return {"status": "error", "detail": str(e)}
 
 app.mount("/static", StaticFiles(directory=STATIC_AUDIO_DIR), name="static")
 
