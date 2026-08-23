@@ -211,10 +211,20 @@ export default function FamilyLoginPage() {
           </button>
         </form>
 
-        {/* Demo Credentials Styled Glass Pill */}
-        <div className="p-3 rounded-xl bg-black/40 border border-white/10 text-center text-xs text-[#8DA0B0] space-y-1">
-          <p className="font-bold text-[#E6EBF0]">{t.demoTitle}</p>
-          <p className="font-mono text-[11px] text-[#4EB8E0]">Phone: <span className="text-white font-bold">9876543210</span> | PIN: <span className="text-white font-bold">1234</span></p>
+        {/* Interactive 1-Click Demo Credentials Pill */}
+        <div 
+          onClick={() => {
+            setPhoneNumber('9876543210');
+            setPin('1234');
+          }}
+          className="p-3.5 rounded-xl bg-[#2C7FB8]/20 hover:bg-[#2C7FB8]/35 border border-[#4EB8E0]/40 text-center text-xs text-[#8DA0B0] space-y-1.5 cursor-pointer transition-all hover:scale-[1.02] shadow-lg group"
+        >
+          <p className="font-bold text-white flex items-center justify-center gap-1.5 text-xs group-hover:text-[#4EB8E0]">
+            ⚡ Click to Auto-Fill Parent Demo Credentials
+          </p>
+          <p className="font-mono text-[11px] text-[#4EB8E0]">
+            Phone: <span className="text-white font-bold">9876543210</span> | PIN: <span className="text-white font-bold">1234</span>
+          </p>
         </div>
 
         {/* Staff Cross-Navigation Link */}
