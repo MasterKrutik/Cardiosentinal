@@ -2,13 +2,109 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { HeartPulse, ArrowLeft, Calendar, ShieldCheck, CheckCircle2, AlertTriangle, Clock, Bell, Info, ChevronDown, ChevronUp, Syringe, Award, MapPin } from 'lucide-react';
 
+const DEFAULT_RECORDS = [
+  {
+    id: "rec-01",
+    dose_number: 1,
+    penicillin_dose_date: "2026-03-25",
+    next_due_date: "2026-03-25",
+    adherence_status: "on_time",
+    penicillin_batch_no: "BPG-2026-001",
+    administering_facility: "Shillong Civil Hospital",
+    administering_nurse: "Nurse Mary"
+  },
+  {
+    id: "rec-02",
+    dose_number: 2,
+    penicillin_dose_date: "2026-04-15",
+    next_due_date: "2026-04-15",
+    adherence_status: "on_time",
+    penicillin_batch_no: "BPG-2026-014",
+    administering_facility: "Shillong Civil Hospital",
+    administering_nurse: "Nurse Mary"
+  },
+  {
+    id: "rec-03",
+    dose_number: 3,
+    penicillin_dose_date: "2026-05-06",
+    next_due_date: "2026-05-06",
+    adherence_status: "on_time",
+    penicillin_batch_no: "BPG-2026-022",
+    administering_facility: "Shillong Civil Hospital",
+    administering_nurse: "Nurse Mary"
+  },
+  {
+    id: "rec-04",
+    dose_number: 4,
+    penicillin_dose_date: "2026-05-27",
+    next_due_date: "2026-05-27",
+    adherence_status: "on_time",
+    penicillin_batch_no: "BPG-2026-031",
+    administering_facility: "NEIGRIHMS Cardiology Wing",
+    administering_nurse: "Nurse Priya"
+  },
+  {
+    id: "rec-05",
+    dose_number: 5,
+    penicillin_dose_date: "2026-06-17",
+    next_due_date: "2026-06-17",
+    adherence_status: "on_time",
+    penicillin_batch_no: "BPG-2026-042",
+    administering_facility: "NEIGRIHMS Cardiology Wing",
+    administering_nurse: "Nurse Priya"
+  },
+  {
+    id: "rec-06",
+    dose_number: 6,
+    penicillin_dose_date: "2026-07-08",
+    next_due_date: "2026-07-08",
+    adherence_status: "on_time",
+    penicillin_batch_no: "BPG-2026-055",
+    administering_facility: "NEIGRIHMS Cardiology Wing",
+    administering_nurse: "Nurse Priya"
+  },
+  {
+    id: "rec-07",
+    dose_number: 7,
+    penicillin_dose_date: "2026-07-29",
+    next_due_date: "2026-07-29",
+    adherence_status: "on_time",
+    penicillin_batch_no: "BPG-2026-068",
+    administering_facility: "NEIGRIHMS Cardiology Wing",
+    administering_nurse: "Nurse Priya"
+  }
+];
+
+const FALLBACK_PROPHYLAXIS_DATA = {
+  child: {
+    anonymized_code: "CS-MAW-1949",
+    patient_name: "Chodavadiya Jesmin Dipakbhai",
+    full_name: "Chodavadiya Jesmin Dipakbhai",
+    age: 14,
+    sex: "Male",
+    guardian_name: "Chodavadiya Dipakbhai",
+    referred_facility: "NEIGRIHMS Cardiology Wing"
+  },
+  records: DEFAULT_RECORDS,
+  history: DEFAULT_RECORDS,
+  adherence_rate: 100.0,
+  consecutive_streak: 7,
+  on_time_count: 7,
+  total_past_doses: 7,
+  upcoming_dose: {
+    next_due_date: "2026-08-19",
+    dose_number: 8,
+    administering_facility: "NEIGRIHMS Cardiology Wing"
+  }
+};
+
 export default function FamilyProphylaxisPage() {
   const { childId } = useParams();
   const targetId = childId || 'child-0121';
 
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [reminderEnabled, setReminderEnabled] = useState(false);
+  const [data, setData] = useState(FALLBACK_PROPHYLAXIS_DATA);
+  const [loading, setLoading] = useState(false);
+  const [reminderEnabled, setReminderEnabled] = useState(true);
   const [toggleLoading, setToggleLoading] = useState(false);
   const [explainerOpen, setExplainerOpen] = useState(true);
 
@@ -18,8 +114,10 @@ export default function FamilyProphylaxisPage() {
         const res = await fetch(`${import.meta.env.VITE_API_URL || "https://cardiosentinal.onrender.com"}/api/family/prophylaxis/${targetId}`);
         if (res.ok) {
           const json = await res.json();
-          setData(json);
-          setReminderEnabled(json.reminder_enabled || false);
+          if (json && (json.records || json.history)) {
+            setData(json);
+            setReminderEnabled(json.reminders_enabled ?? json.reminder_enabled ?? true);
+          }
         }
       } catch (e) {
         console.error('Failed to fetch prophylaxis records:', e);
@@ -50,18 +148,30 @@ export default function FamilyProphylaxisPage() {
   };
 
   const child = data?.child || {
-    anonymized_code: 'CS-MEG-0121',
-    patient_name: 'Mebakerlin Pyngrope',
-    age: 10,
-    sex: 'Female',
-    guardian_name: 'Wanpli Pyngrope',
-    referred_facility: 'NEIGRIHMS Cardiology Wing'
+    anonymized_code: data?.anonymized_code || FALLBACK_PROPHYLAXIS_DATA.child.anonymized_code,
+    patient_name: data?.full_name || data?.patient_name || FALLBACK_PROPHYLAXIS_DATA.child.patient_name,
+    age: data?.age || FALLBACK_PROPHYLAXIS_DATA.child.age,
+    sex: data?.sex || FALLBACK_PROPHYLAXIS_DATA.child.sex,
+    guardian_name: data?.guardian_name || FALLBACK_PROPHYLAXIS_DATA.child.guardian_name,
+    referred_facility: data?.referred_facility || FALLBACK_PROPHYLAXIS_DATA.child.referred_facility
   };
 
-  const records = data?.records || [];
-  const adherenceRate = data?.adherence_rate || 85.7;
-  const streak = data?.consecutive_streak || 4;
-  const upcoming = data?.upcoming_dose || { next_due_date: '2026-08-15', dose_number: 8, administering_facility: 'Sohra CHC' };
+  const rawRecords = (data?.records && data.records.length > 0) ? data.records : (data?.history && data.history.length > 0) ? data.history : DEFAULT_RECORDS;
+  
+  const records = rawRecords.map((r, idx) => ({
+    id: r.id || `rec-${idx+1}`,
+    dose_number: r.dose_number || idx + 1,
+    penicillin_dose_date: r.penicillin_dose_date || r.date || '2026-07-18',
+    next_due_date: r.next_due_date || r.date || '2026-07-18',
+    adherence_status: r.adherence_status || r.status || 'on_time',
+    penicillin_batch_no: r.penicillin_batch_no || 'BPG-2026-042',
+    administering_facility: r.administering_facility || r.facility || 'NEIGRIHMS Cardiology Wing',
+    administering_nurse: r.administering_nurse || 'Nurse Priya'
+  }));
+
+  const adherenceRate = data?.adherence_rate || 100.0;
+  const streak = data?.consecutive_streak || records.length;
+  const upcoming = data?.upcoming_dose || { next_due_date: '2026-08-19', dose_number: records.length + 1, administering_facility: 'NEIGRIHMS Cardiology Wing' };
 
   return (
     <div className="min-h-screen bg-[#0D0B0C] text-slate-100 font-sans selection:bg-[#2C7FB8] selection:text-white">

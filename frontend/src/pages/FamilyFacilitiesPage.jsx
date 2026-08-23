@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { HeartPulse, MapPin, Navigation, Clock, Building2, ExternalLink, ArrowLeft, ShieldAlert, CheckCircle2, AlertTriangle, Layers, Info, Award, PhoneCall, Video, Bed, ShieldCheck, X, Globe } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { MAP_TILE_CONFIG } from '../config/mapTiles';
 
 // Helper component to auto-recenter and fit map bounds
@@ -170,7 +171,7 @@ export default function FamilyFacilitiesPage() {
   const [homeState, setHomeState] = useState('Meghalaya');
   const [activeMode, setActiveMode] = useState('gps');
   const [loading, setLoading] = useState(false);
-  const [userCoords, setUserCoords] = useState(null);
+  const [userCoords, setUserCoords] = useState({ lat: 25.5788, lng: 91.8933 });
   const [isOutOfDistrict, setIsOutOfDistrict] = useState(false);
   const [selectedFacilityId, setSelectedFacilityId] = useState('fac-01');
 
