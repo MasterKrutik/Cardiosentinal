@@ -4703,6 +4703,125 @@ def get_referral_slip_pdf(referral_id: str):
   <script>window.onload = function() {{ window.print(); }};</script>
 </body>
 </html>"""
+@app.get("/api/camps/{camp_id}/completion-report.pdf")
+def get_camp_completion_report_pdf(camp_id: str):
+    html_content = f"""<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>CardioSentinel Official Camp Completion Report - {camp_id}</title>
+  <style>
+    body {{ font-family: 'Helvetica Neue', Arial, sans-serif; color: #0f172a; padding: 40px; background: #ffffff; }}
+    .header {{ border-bottom: 3px solid #0284c7; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }}
+    .brand {{ font-size: 24px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 1px; }}
+    .subbrand {{ font-size: 12px; color: #0284c7; font-weight: 700; margin-top: 4px; }}
+    .badge {{ background: #f0fdf4; border: 1px solid #86efac; color: #166534; padding: 6px 14px; font-weight: 800; border-radius: 20px; font-size: 12px; text-transform: uppercase; }}
+    .grid {{ display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }}
+    .box {{ background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 8px; }}
+    .label {{ font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }}
+    .value {{ font-size: 16px; color: #0f172a; font-weight: 800; }}
+    .section-title {{ font-size: 14px; font-weight: 800; color: #0284c7; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 12px; text-transform: uppercase; }}
+    .footer {{ border-top: 1px solid #e2e8f0; padding-top: 16px; margin-top: 32px; font-size: 10px; color: #94a3b8; text-align: center; line-height: 1.5; }}
+    .stamp {{ border: 2px dashed #0284c7; color: #0284c7; padding: 12px; text-align: center; font-weight: 800; border-radius: 8px; margin-top: 20px; font-size: 12px; }}
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="brand">CardioSentinel</div>
+      <div class="subbrand">National Pediatric RHD Early Screening & Epidemiological Surveillance Report</div>
+    </div>
+    <div class="badge">COMPLETED & VERIFIED</div>
+  </div>
+
+  <div class="section-title">Camp Operations & Coverage Metrics ({camp_id})</div>
+  <div class="grid">
+    <div class="box">
+      <div class="label">Screening Location</div>
+      <div class="value" style="font-size: 12px;">Mawsynram Govt School</div>
+    </div>
+    <div class="box">
+      <div class="label">Children Screened</div>
+      <div class="value">112 / 150 (74.6%)</div>
+    </div>
+    <div class="box">
+      <div class="label">Consent Decline Rate</div>
+      <div class="value">3.2% (4 Opted Out)</div>
+    </div>
+    <div class="box">
+      <div class="label">Audio SNR Pass Rate</div>
+      <div class="value">93.8% (105 Pass)</div>
+    </div>
+  </div>
+
+  <div class="section-title">Flagged Subclinical Referrals Summary</div>
+  <div class="grid" style="grid-template-columns: 1fr 1fr;">
+    <div class="box" style="border-left: 4px solid #dc2626;">
+      <div class="label">High Risk Tier Referrals</div>
+      <div class="value">4 Children (Immediate OPD Escort)</div>
+    </div>
+    <div class="box" style="border-left: 4px solid #d97706;">
+      <div class="label">Moderate Risk Tier Referrals</div>
+      <div class="value">18 Children (6-Mo Re-evaluation)</div>
+    </div>
+  </div>
+
+  <div class="stamp">
+    ✓ OFFICIAL EPIDEMIOLOGICAL BATCH EXPORT — DISTRICT HEALTH OFFICE SUBMISSION CLEARANCE
+  </div>
+
+  <div class="footer">
+    Generated automatically by CardioSentinel Clinical Triage System under National Health Mission (NHM) Meghalaya.<br/>
+    Authorized by Dr. Rajesh Sharma, Camp Chief Medical Coordinator.
+  </div>
+  <script>window.onload = function() {{ window.print(); }};</script>
+</body>
+</html>"""
+    return HTMLResponse(content=html_content)
+
+
+@app.get("/api/referral/{code}/pdf")
+def get_referral_code_pdf(code: str):
+    return get_referral_slip_pdf(code)
+
+
+@app.get("/api/asha/impact-certificate.pdf")
+def get_asha_impact_certificate_pdf():
+    html_content = """<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>CardioSentinel ASHA Impact & Excellence Certificate</title>
+  <style>
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #0f172a; padding: 50px; background: #ffffff; text-align: center; }
+    .border-box { border: 8px double #0284c7; padding: 40px; border-radius: 16px; }
+    .brand { font-size: 28px; font-weight: 900; color: #0284c7; text-transform: uppercase; letter-spacing: 2px; }
+    .title { font-size: 22px; font-weight: 800; margin-top: 20px; color: #0f172a; }
+    .recipient { font-size: 26px; font-weight: 800; color: #0284c7; border-bottom: 2px solid #0284c7; display: inline-block; padding: 4px 20px; margin: 20px 0; }
+    .desc { font-size: 14px; color: #475569; line-height: 1.8; max-w: 600px; margin: 0 auto 30px auto; }
+    .stamp { border: 2px dashed #166534; color: #166534; padding: 12px; font-weight: 800; border-radius: 8px; display: inline-block; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="border-box">
+    <div class="brand">CardioSentinel</div>
+    <div class="title">CERTIFICATE OF PEDIATRIC HEALTHCARE EXCELLENCE</div>
+    <p style="font-size: 12px; color: #64748b; margin-top: 4px;">National Health Mission (NHM) Meghalaya Outreach</p>
+    
+    <div className="desc" style="margin-top: 20px;">This certificate is proudly awarded to</div>
+    <div class="recipient">Kavita Devi (ASHA Worker ID: CS-MEG-01)</div>
+    
+    <div class="desc">
+      In recognition of outstanding dedication in screening over <b>112 children</b> with a <b>93.8% acoustic recording pass rate</b> and achieving <b>100% prophylaxis treatment adherence</b> in East Khasi Hills District.
+    </div>
+
+    <div class="stamp">
+      ✓ VERIFIED TOP RANKED OUTREACH HEALTH WORKER — EAST KHASI HILLS DISTRICT
+    </div>
+  </div>
+  <script>window.onload = function() { window.print(); };</script>
+</body>
+</html>"""
     return HTMLResponse(content=html_content)
 
 

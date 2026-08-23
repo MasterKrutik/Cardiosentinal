@@ -43,6 +43,75 @@ const FALLBACK_CAMPS = [
 
 export default function CampSetupPage() {
   const [camps, setCamps] = useState(FALLBACK_CAMPS);
+
+  const handleDownloadConsentPdf = (camp) => {
+    const pdfContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>CardioSentinel Consent Batch PDF - ${camp.school_name}</title>
+  <style>
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #0f172a; padding: 40px; background: #ffffff; }
+    .header { border-bottom: 3px solid #0284c7; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+    .brand { font-size: 24px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 1px; }
+    .subbrand { font-size: 12px; color: #0284c7; font-weight: 700; margin-top: 4px; }
+    .badge { background: #f0fdf4; border: 1px solid #86efac; color: #166534; padding: 6px 14px; font-weight: 800; border-radius: 20px; font-size: 12px; text-transform: uppercase; }
+    .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+    .box { background: #f8fafc; border: 1px solid #e2e8f0; padding: 14px; border-radius: 8px; }
+    .label { font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+    .value { font-size: 15px; color: #0f172a; font-weight: 800; }
+    .section-title { font-size: 14px; font-weight: 800; color: #0284c7; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 12px; text-transform: uppercase; }
+    .footer { border-top: 1px solid #e2e8f0; padding-top: 16px; margin-top: 32px; font-size: 10px; color: #94a3b8; text-align: center; line-height: 1.5; }
+    .stamp { border: 2px dashed #0284c7; color: #0284c7; padding: 12px; text-align: center; font-weight: 800; border-radius: 8px; margin-top: 20px; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <div class="brand">CardioSentinel</div>
+      <div class="subbrand">Parental Digital Consent Clearance & Screening Roster</div>
+    </div>
+    <div class="badge">${camp.status.toUpperCase()}</div>
+  </div>
+
+  <div class="section-title">Camp Details</div>
+  <div class="grid">
+    <div class="box">
+      <div class="label">School Location</div>
+      <div class="value">${camp.school_name}</div>
+    </div>
+    <div class="box">
+      <div class="label">Camp Date</div>
+      <div class="value">${camp.camp_date}</div>
+    </div>
+    <div class="box">
+      <div class="label">Target Roster</div>
+      <div class="value">${camp.target_headcount} Students</div>
+    </div>
+  </div>
+
+  <div class="stamp">
+    ✓ OFFICIAL PARENTAL CONSENT CLEARANCE BATCH — AUTHORIZED BY DISTRICT HEALTH OFFICE
+  </div>
+
+  <div class="footer">
+    Generated automatically by CardioSentinel Clinical Triage System under National Health Mission (NHM).
+  </div>
+  <script>window.onload = function() { window.print(); };</script>
+</body>
+</html>`;
+
+    const blob = new Blob([pdfContent], { type: 'text/html' });
+    const blobUrl = window.URL.createObjectURL(blob);
+    const win = window.open(blobUrl, '_blank');
+    if (!win) {
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `Consent_Batch_${camp.id}.html`;
+      document.body.appendChild(link);
+      link.click();
+    }
+  };
   const [schools, setSchools] = useState([]);
   
   // Form State

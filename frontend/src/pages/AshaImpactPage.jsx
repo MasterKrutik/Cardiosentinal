@@ -97,13 +97,53 @@ export default function AshaImpactPage() {
   const targetTickPct = Math.min((targetSnr / maxSnr) * 100, 100).toFixed(2);
 
   const handleDownloadCertificate = () => {
-    const url = (import.meta.env.VITE_API_URL || 'https://cardiosentinal.onrender.com') + '/api/asha/impact-certificate.pdf';
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'CardioSentinel_Impact_Certificate_Kavita_Devi.pdf');
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
+    const pdfContent = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>CardioSentinel ASHA Impact & Excellence Certificate</title>
+  <style>
+    body { font-family: 'Helvetica Neue', Arial, sans-serif; color: #0f172a; padding: 50px; background: #ffffff; text-align: center; }
+    .border-box { border: 8px double #0284c7; padding: 40px; border-radius: 16px; }
+    .brand { font-size: 28px; font-weight: 900; color: #0284c7; text-transform: uppercase; letter-spacing: 2px; }
+    .title { font-size: 22px; font-weight: 800; margin-top: 20px; color: #0f172a; }
+    .recipient { font-size: 26px; font-weight: 800; color: #0284c7; border-bottom: 2px solid #0284c7; display: inline-block; padding: 4px 20px; margin: 20px 0; }
+    .desc { font-size: 14px; color: #475569; line-height: 1.8; max-width: 600px; margin: 0 auto 30px auto; }
+    .stamp { border: 2px dashed #166534; color: #166534; padding: 12px; font-weight: 800; border-radius: 8px; display: inline-block; font-size: 12px; }
+  </style>
+</head>
+<body>
+  <div class="border-box">
+    <div class="brand">CardioSentinel</div>
+    <div class="title">CERTIFICATE OF PEDIATRIC HEALTHCARE EXCELLENCE</div>
+    <p style="font-size: 12px; color: #64748b; margin-top: 4px;">National Health Mission (NHM) Meghalaya Outreach</p>
+    
+    <div class="desc" style="margin-top: 20px;">This certificate is proudly awarded to</div>
+    <div class="recipient">Kavita Devi (ASHA Worker ID: CS-MEG-01)</div>
+    
+    <div class="desc">
+      In recognition of outstanding dedication in screening over <b>112 children</b> with a <b>93.8% acoustic recording pass rate</b> and achieving <b>100% prophylaxis treatment adherence</b> in East Khasi Hills District.
+    </div>
+
+    <div class="stamp">
+      ✓ VERIFIED TOP RANKED OUTREACH HEALTH WORKER — EAST KHASI HILLS DISTRICT
+    </div>
+  </div>
+  <script>window.onload = function() { window.print(); };</script>
+</body>
+</html>`;
+
+    const blob = new Blob([pdfContent], { type: 'text/html' });
+    const blobUrl = window.URL.createObjectURL(blob);
+    const win = window.open(blobUrl, '_blank');
+    if (!win) {
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `CardioSentinel_Impact_Certificate_Kavita_Devi.html`;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    }
   };
 
   return (
